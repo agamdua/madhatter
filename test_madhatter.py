@@ -2,7 +2,7 @@ import unittest
 
 import contrived_example as module
 
-from assembler import get_jobs
+from assembler import get_tasks as get_jobs
 from contrived_example import hello, job, another_job, result
 
 
