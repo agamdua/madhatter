@@ -40,6 +40,7 @@ def another_job(sequence_from_job):
     return tuple(sequence_from_job)
 
 
+@depends(another_job)
 @postprocess
 def result(job_output):
     return list(job_output)

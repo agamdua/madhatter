@@ -7,28 +7,20 @@ def get_jobs(module):
     """
     this method could only have been written in a sleep deprived stupor
     """
-    jobs = {obj[1].dependency: obj[1] for obj in inspect.getmembers(module)
-            if is_job(obj[1])}
+    jobs = [obj[1] for obj in inspect.getmembers(module) if is_job(obj[1])]
+    tasks = []
 
-    last = jobs.pop(-1)
-    first = jobs.pop(False)
+    last = [x for x in jobs if getattr(x, 'end', None)][0]
 
-    reversed_tasks = []
+    def append_next(job):
+        if job is False:
+            return
 
-    def cascade(job):
-        if job.dependency is False:
-            reversed_tasks.insert(0, job)
+        tasks.append(job)
 
-        if job not in reversed_tasks:
-            reversed_tasks.append(job)
-            cascade(job.dependency)
+        append_next(job.dependency)
 
-    for job in jobs.values():
-        cascade(job)
-
-    tasks = reversed_tasks[::-1]
-    tasks.remove(first)
-    tasks.insert(0, first)
-    tasks.append(last)
+    append_next(last)
+    tasks.reverse()
 
     return tasks

@@ -42,8 +42,8 @@ def preprocess(func):
 
 
 def postprocess(func):
-    func.dependency = -1
-    func._hatter = True
+    func._hatter = -1
+    func.end = True
     return func
 
 
