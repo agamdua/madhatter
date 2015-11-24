@@ -5,7 +5,7 @@ The programmer will be encouraged to think in a 3 step process:
   - postprocessing (after)
 """
 
-from madhatter import before, parallel, after
+from decorators import before, parallel, after
 
 
 @before
