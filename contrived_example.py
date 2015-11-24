@@ -5,15 +5,19 @@ The programmer will be encouraged to think in a 3 step process:
   - postprocessing (after)
 """
 
-from madhatter import before, parallel, after
+from decorators import depends, parallel, preprocess, postprocess
 
 
-@before
+@preprocess
 def hello():
-    print("Hey!")
+    """
+    Return a sequence which can be consumed by the next job
+    """
+    return [1, 2, 3, 4]
 
 
-@parallel(number=4, order=1)  # "number": number of splits to run in parallel
+@depends(hello)
+@parallel(n=4)
 def job(sequence):
     """
     This could be any sequence that we can break up into
@@ -22,19 +26,21 @@ def job(sequence):
     This could be generated from the `before` job, or
     from somewhere else entirely.
     """
-    print(list(sequence))
+    return tuple(sequence)
 
 
-@parallel(number=2, order=2)
-def another_job(another_or_even_same_sequence):
+@depends(job)
+@parallel(n=2)
+def another_job(sequence_from_job):
     """
     This has to be unrelated to "job", and the order needs
     to explicitly be set if there is more than one parallel
     job.
     """
-    print(list(another_or_even_same_sequence))
+    return tuple(sequence_from_job)
 
 
-@after
+@depends(another_job)
+@postprocess
 def result(job_output):
-    print("result!")
+    return list(job_output)

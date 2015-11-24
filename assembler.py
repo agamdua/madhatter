@@ -1,15 +1,26 @@
 import inspect
 
-from collections import OrderedDict
-
-
-is_job = lambda x: hasattr(x, '_parallel_mode')
-parallel_mode = lambda x: x._parallel_mode
+is_job = lambda x: hasattr(x, '_hatter')
 
 
 def get_jobs(module):
-    tasks = sorted(
-        [obj for obj in inspect.getmembers(module) if is_job(obj[1])],
-        key=lambda x: parallel_mode(x[1])
-    )
-    return OrderedDict(tasks)
+    """
+    this method could only have been written in a sleep deprived stupor
+    """
+    jobs = [obj[1] for obj in inspect.getmembers(module) if is_job(obj[1])]
+    tasks = []
+
+    last = [x for x in jobs if getattr(x, 'end', None)][0]
+
+    def append_next(job):
+        if job is False:
+            return
+
+        tasks.append(job)
+
+        append_next(job.dependency)
+
+    append_next(last)
+    tasks.reverse()
+
+    return tasks
