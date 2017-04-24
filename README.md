@@ -29,7 +29,7 @@ There is a web interface planned which will integrate with a message queue for a
 
 Architecture & Design
 =====================
-This follows the [pipes and filteres](http://www.cs.olemiss.edu/~hcc/csci581oo/notes/pipes.html) design pattern.
+This follows the [pipes and filters](http://www.cs.olemiss.edu/~hcc/csci581oo/notes/pipes.html) design pattern.
 
 There's a [great article on MSDN ](https://msdn.microsoft.com/en-us/library/dn568100.aspx) about such a pipeline where they describe the model pretty well:
 
